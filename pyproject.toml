@@ -1,0 +1,39 @@
+## What system to build the project with? I.e. Setuptools, Wheel, Poetry, etc.
+## Using `setuptools` here.
+
+[build-system]
+    requires = [
+        "setuptools>=60",
+        "setuptools-scm>=8.0"
+    ]
+    build-backend = "setuptools.build_meta"
+
+[project]
+    # Project information
+    name = "XSUI"
+    version = "0.1.0"
+    description = "A package for running an Agilent SMU."
+    readme = "README.md"
+    license = {file = "LICENSE"}
+    keywords = ["SMU", "Agilent", "B2900", "Control", "TCPIP", "pyvisa"]
+    authors = [
+        {name = "Matthew Gebert", email="matthew.gebert@monash.edu"},
+        ]
+    maintainers = [
+        {name = "Matthew Gebert", email="matthew.gebert@monash.edu"},
+    ]
+
+    # Project compatibility:
+    requires-python = ">=3.11"
+    dependencies = [
+        "jupyter",
+        "pyvisa",
+        "pyvisa-py", #Could not locate a VISA implementation. Install either the IVI binary or pyvisa-py.
+        "zeroconf", #TCPIP::hislip resource discovery requires the zeroconf package to be installed...
+        "matplotlib",
+        "numpy",
+    ]
+
+[project.urls]
+    # Website, documentation and other continuous integration URLS.
+    code = "https://github.com/mattgebert/SMU-Control-Agilent2900"
