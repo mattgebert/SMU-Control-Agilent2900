@@ -3,18 +3,20 @@
 
 [build-system]
     requires = [
-        "setuptools>=60",
-        "setuptools-scm>=8.0"
+        # "setuptools>=60",
+        # "setuptools-scm>=8.0"
+        "hatchling",
     ]
-    build-backend = "setuptools.build_meta"
+    # build-backend = "setuptools.build_meta"
+    build-backend = "hatchling.build"
 
 [project]
     # Project information
-    name = "XSUI"
+    name = "SMUControlAgilent2900"
     version = "0.1.0"
     description = "A package for running an Agilent SMU."
     readme = "README.md"
-    license = {file = "LICENSE"}
+    license = {file = "MIT.LICENSE"}
     keywords = ["SMU", "Agilent", "B2900", "Control", "TCPIP", "pyvisa"]
     authors = [
         {name = "Matthew Gebert", email="matthew.gebert@monash.edu"},
@@ -37,3 +39,72 @@
 [project.urls]
     # Website, documentation and other continuous integration URLS.
     code = "https://github.com/mattgebert/SMU-Control-Agilent2900"
+
+
+[dependency-groups]
+# Dependency groups for optional dependencies.
+all = [
+    {include-group = "dev"},
+]
+dev = [
+    "pre-commit",
+    "commitizen",
+    "ruff",
+]
+
+
+#######################################################
+#############  Package Build configurations  ##########
+#######################################################
+
+# Use "hatchling build" as the build command.
+
+[tool.hatch.build]
+    # Build configuration for hatchling.
+    include = [
+        "SMUControlAgilent2900/",
+    ]
+
+[tool.hatch.envs.dev]
+dependency-groups = ["dev"]
+post-install-commands = [
+    # Install pre-commit hooks
+    "pre-commit install --install-hooks",
+]
+
+
+#######################################################
+#############  Pre-commit configurations  #############
+#######################################################
+
+## Linting
+# Ruff
+[tool.ruff] # Same as Black formatting.
+line-length = 88
+indent-width = 4
+
+[tool.ruff.format] # Same as Black formatting.
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+# ------------------- NUMPYDOC -------------------
+[tool.numpydoc_validation]
+checks = [
+    "all",   # report on all checks, except the below
+    "EX01",
+    "SA01",
+    "ES01",
+]
+
+override_SS05 = [  # override SS05 to allow docstrings starting with these words
+    '^Process ',
+    '^Assess ',
+    '^Access ',
+    '^Alias',
+]
+
+[tool.commitizen]
+update_changelog_on_bump = true
+tag_format = "v$major.$minor.$patch$prerelease.$devrelease"
