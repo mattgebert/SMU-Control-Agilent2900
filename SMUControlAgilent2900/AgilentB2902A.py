@@ -4,6 +4,7 @@ import pyvisa
 import time
 import datetime
 import numpy as np
+import numpy.typing as npt
 from enum import StrEnum
 
 
@@ -334,7 +335,7 @@ class AgilentB2902A:
 
     def run_timed_IV_measurement(
         self,
-        voltages: list[float | int],
+        voltages: list[float | int] | npt.NDArray[np.floating],
         meas_interval: float | int = 0.1,
         settle_time: float | int = 0.1,
     ) -> np.ndarray:
@@ -366,12 +367,16 @@ class AgilentB2902A:
         self.datapoints = []
 
         # Set the voltage to the first value in the list
+        presound = self.sounds
+        self.sounds = False
         self.set_sense(AgilentB2902A.mode.CURR, meas_interval * 0.8)
         self.set_source(AgilentB2902A.mode.VOLT, voltages[0])
+        self.sounds = True if presound else False
         self.set_output(True)
 
         # Now loop through the voltages and perform measurements
         for i, voltage in enumerate(voltages):
+            self.sounds = False
             self.set_source(AgilentB2902A.mode.VOLT, voltage)
             # Wait the settle time before starting measurements
             t_set = time.time()
@@ -388,7 +393,11 @@ class AgilentB2902A:
             """Time since start of routine"""
             vmeas, imeas = self.measure()
             self.datapoints.append((t_meas, voltage, imeas, vmeas))
+            if presound:
+                self.beep(100, 0.05)
 
         self.datapoints = np.array(self.datapoints, dtype=float)
+        # Restore the original sound setting
+        self.sounds = presound
 
         return self.datapoints

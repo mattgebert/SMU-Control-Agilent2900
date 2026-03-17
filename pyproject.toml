@@ -32,7 +32,7 @@
         "pyvisa",
         "pyvisa-py", #Could not locate a VISA implementation. Install either the IVI binary or pyvisa-py.
         "zeroconf", #TCPIP::hislip resource discovery requires the zeroconf package to be installed...
-        "matplotlib",
+        "matplotlib", # Though not required, add for simplicity.
         "numpy",
     ]
 
