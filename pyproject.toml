@@ -34,6 +34,7 @@
         "zeroconf", #TCPIP::hislip resource discovery requires the zeroconf package to be installed...
         "matplotlib", # Though not required, add for simplicity.
         "numpy",
+        "pandas",
     ]
 
 [project.urls]
